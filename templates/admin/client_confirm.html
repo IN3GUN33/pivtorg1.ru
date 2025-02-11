@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Подтверждение регистрации | Pivtorg1{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-mobile-alt me-2"></i>
+                        Подтверждение номера телефона
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        
+                        <div class="mb-4 text-center">
+                            <p class="lead">
+                                Код подтверждения был отправлен на номер:<br>
+                                <strong class="text-primary">{{ session.admin_reg_data.phone }}</strong>
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Введите 6-значный код</label>
+                            <input type="text" 
+                                   name="code" 
+                                   class="form-control form-control-lg text-center" 
+                                   placeholder="••••••"
+                                   pattern="\d{6}"
+                                   maxlength="6"
+                                   required
+                                   autofocus>
+                            <small class="form-text text-muted">
+                                Код действителен в течение 10 минут
+                            </small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Подтвердить
+                            </button>
+                            
+                            <a href="{{ url_for('manage_clients') }}" 
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-times-circle me-2"></i>
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

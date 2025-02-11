@@ -1,0 +1,27 @@
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --success: #27ae60;
+    --danger: #e74c3c;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f8f9fa;
+}
+
+.navbar-pivtorg {
+    background: var(--primary) !important;
+}
+
+.btn-primary {
+    background: var(--secondary);
+    border: none;
+}
+
+.qr-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}

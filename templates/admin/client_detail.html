@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>{{ user.name }} <small class="text-muted">{{ user.phone }}</small></h2>
+        <a href="{{ url_for('manage_clients') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Назад
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Левая колонка - Информация -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-info-circle"></i> Основная информация
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-5">Дата регистрации:</dt>
+                        <dd class="col-sm-7">{{ user.created_at|datetime_format }}</dd>
+
+                        <dt class="col-sm-5">Бонусные баллы:</dt>
+                        <dd class="col-sm-7">{{ user.bonus_points }}</dd>
+
+                        <dt class="col-sm-5">Персональная скидка:</dt>
+                        <dd class="col-sm-7">{{ user.discount }}%</dd>
+                    </dl>
+
+                    <form method="POST" action="{{ url_for('update_client_info', user_id=user.id) }}">
+                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label>Комментарий</label>
+                            <textarea name="about" class="form-control" rows="3">{{ user.about or '' }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-save"></i> Сохранить изменения
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка - Операции -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <i class="fas fa-cash-register"></i> Новая операция
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label>Сумма покупки (₽)</label>
+                                <input type="number" 
+                                       name="amount" 
+                                       class="form-control" 
+                                       step="0.01" 
+                                       required>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label>Использовать баллов</label>
+                                <input type="number" 
+                                       name="bonuses_used" 
+                                       class="form-control"
+                                       min="0" 
+                                       max="{{ user.bonus_points }}"
+                                       value="0">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label>Скидка (%)</label>
+                                <input type="number" 
+                                       name="discount" 
+                                       class="form-control"
+                                       min="0" 
+                                       max="50" 
+                                       value="{{ user.discount }}">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success w-100 mt-3">
+                            <i class="fas fa-check-circle"></i> Подтвердить покупку
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-history"></i> История операций
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Дата</th>
+                                <th>Сумма</th>
+                                <th>Скидка</th>
+                                <th>Бонусы</th>
+                                <th>Итог</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in transactions %}
+                            <tr>
+                                <td>{{ t.created_at|datetime_format }}</td>
+                                <td>{{ "%.2f"|format(t.amount) }}₽</td>
+                                <td>{{ t.discount_applied }}%</td>
+                                <td class="text-danger">-{{ t.bonuses_used }}</td>
+                                <td class="fw-bold">{{ "%.2f"|format(t.final_amount) }}₽</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    Нет зарегистрированных операций
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

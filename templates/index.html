@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Наше пиво</h2>
+    
+    <div class="row">
+        {% for beer in beers %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <img src="{{ url_for('uploaded_file', filename=beer.image_url) }}" 
+                    class="img-thumbnail" 
+                    style="max-width: 100px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ beer.name }}</h5>
+                    <p class="card-text">{{ beer.description }}</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Стиль: {{ beer.style }}</li>
+                        <li class="list-group-item">Алкоголь: {{ beer.abv }}%</li>
+                        <li class="list-group-item">Цена: {{ beer.price }}₽</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

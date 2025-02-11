@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль | Pivtorg1{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Ваш профиль</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h4>{{ user.name }}</h4>
+                        <p class="text-muted">{{ user.phone }}</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="alert alert-success">
+                                <h6 class="mb-0">Бонусные баллы</h6>
+                                <div class="display-5000">{{ user.bonus_points | default(0) }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="alert alert-info">
+                                <h6 class="mb-0">Ваша скидка</h6>
+                                <div class="display-5000">{{ user.discount }}%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Актуальные акции</h5>
+                </div>
+                <div class="card-body">
+                    {% if promotions %}
+                        <div class="list-group">
+                            {% for promo in promotions %}
+                            <div class="list-group-item mb-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 text-primary">{{ promo.title }}</h6>
+                                        <p class="mb-1">{{ promo.description }}</p>
+                                        <small class="text-muted">
+                                            Действует до: {{ promo.end_date }}
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-success">Активно</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info mb-0">
+                            Сейчас нет активных акций
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

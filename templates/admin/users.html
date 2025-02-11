@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Управление пользователями | Pivtorg1{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h2><i class="fas fa-users-cog me-2"></i>Управление пользователями</h2>
+    
+    <div class="card shadow mt-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Список пользователей</h5>
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" 
+                           class="form-control" 
+                           placeholder="Поиск по телефону или имени">
+                    <button class="btn btn-light">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Телефон</th>
+                            <th>Баллы</th>
+                            <th>Статус</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.points }}</td>
+                            <td>
+                                {% if user.is_admin %}
+                                <span class="badge bg-danger">Админ</span>
+                                {% else %}
+                                <span class="badge bg-success">Пользователь</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

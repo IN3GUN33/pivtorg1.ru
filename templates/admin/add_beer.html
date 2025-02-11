@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить пиво | Pivtorg1{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h2><i class="fas fa-beer me-2"></i>Добавить пиво</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div class="mb-3">
+            <label>Название</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label>Описание</label>
+            <textarea name="description" class="form-control" rows="3"></textarea>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label>Стиль</label>
+                <input type="text" name="style" class="form-control">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Алкоголь (%)</label>
+                <input type="number" name="abv" class="form-control" step="0.1">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Цена (₽)</label>
+                <input type="number" name="price" class="form-control" step="0.01">
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label>Изображение пива</label>
+            <input type="file" 
+                   name="image" 
+                   class="form-control"
+                   accept="image/png, image/jpeg">
+            <small class="text-muted">Допустимые форматы: JPG, PNG (макс. 2MB)</small>
+        </div>
+        
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="is_available" class="form-check-input" checked>
+            <label class="form-check-label">Доступно</label>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

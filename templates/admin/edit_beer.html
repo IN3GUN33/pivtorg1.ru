@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать пиво | Pivtorg1{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h2><i class="fas fa-beer me-2"></i>Редактировать пиво</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div class="mb-3">
+            <label>Название</label>
+            <input type="text" 
+                   name="name" 
+                   class="form-control" 
+                   value="{{ beer.name }}" 
+                   required>
+        </div>
+        
+        <div class="mb-3">
+            <label>Описание</label>
+            <textarea name="description" 
+                      class="form-control" 
+                      rows="3">{{ beer.description }}</textarea>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label>Стиль</label>
+                <input type="text" 
+                       name="style" 
+                       class="form-control" 
+                       value="{{ beer.style }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Алкоголь (%)</label>
+                <input type="number" 
+                       name="abv" 
+                       class="form-control" 
+                       value="{{ beer.abv }}" 
+                       step="0.1">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Цена (₽)</label>
+                <input type="number" 
+                       name="price" 
+                       class="form-control" 
+                       value="{{ beer.price }}" 
+                       step="0.01">
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label>Текущее изображение:</label>
+            {% if beer.image_url %}
+            <img src="{{ url_for('uploaded_file', filename=beer.image_url) }}" 
+                 class="img-thumbnail mb-2" 
+                 style="max-width: 200px;">
+            {% else %}
+            <div class="text-muted">Изображение отсутствует</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label>Новое изображение:</label>
+            <input type="file" 
+                   name="image" 
+                   class="form-control"
+                   accept="image/png, image/jpeg">
+            <small class="text-muted">Допустимые форматы: JPG, PNG (макс. 2MB)</small>
+        </div>
+        
+        <div class="mb-3 form-check">
+            <input type="checkbox" 
+                   name="is_available" 
+                   class="form-check-input" 
+                   {{ 'checked' if beer.is_available }}>
+            <label class="form-check-label">Доступно</label>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="{{ url_for('manage_beers') }}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4>Подтверждение регистрации</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label>Введите SMS-код</label>
+                            <input type="text" name="code" 
+                                   class="form-control text-center" 
+                                   pattern="\d{6}"
+                                   placeholder="123456" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            Подтвердить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+/* Админ-панель */
+.admin-dashboard {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.admin-nav {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.data-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.img-thumbnail {
+    max-width: 100px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.btn-group .btn.active {
+    background: var(--secondary);
+    color: white;
+}
+
+#salesChart {
+    max-height: 400px;
+}

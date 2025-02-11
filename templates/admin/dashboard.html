@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function updateChart(period) {
+        window.location.href = "{{ url_for('admin_dashboard') }}?period=" + period;
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesData = {
+            labels: {{ sales_data | map(attribute='date') | list | tojson }},
+            datasets: [{
+                label: 'Продажи (₽)',
+                data: {{ sales_data | map(attribute='total') | list | tojson }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                tension: 0.1
+            }]
+        };
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: salesData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '₽';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="row">
+        <!-- Левое меню -->
+        <div class="col-md-3 admin-nav">
+            <div class="list-group">
+                <a href="{{ url_for('admin_dashboard') }}" 
+                   class="list-group-item list-group-item-action active">
+                    <i class="fas fa-tachometer-alt me-2"></i>Дашборд
+                </a>
+                <a href="{{ url_for('manage_users') }}" 
+                   class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i>Пользователи
+                </a>
+                <a href="{{ url_for('manage_promotions') }}" 
+                   class="list-group-item list-group-item-action">
+                    <i class="fas fa-tags me-2"></i>Акции
+                </a>
+                <a href="{{ url_for('manage_clients') }}" 
+                   class="list-group-item list-group-item-action">
+                    <i class="fas fa-user-friends me-2"></i>Клиенты
+                </a>
+                <a href="{{ url_for('manage_beers') }}" 
+                   class="list-group-item list-group-item-action">
+                    <i class="fas fa-beer me-2"></i>Каталог пива
+                </a>
+            </div>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="col-md-9">
+            <h2><i class="fas fa-tachometer-alt me-2"></i>Статистика системы</h2>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <h5>Всего пользователей</h5>
+                        <div class="stat-value">{{ stats.total_users }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <h5>Всего баллов</h5>
+                        <div class="stat-value">{{ stats.total_points }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <h5>Активных акций</h5>
+                        <div class="stat-value">{{ stats.active_promos }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card data-table mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Последние операции</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Пользователь</th>
+                                <th>Тип</th>
+                                <th>Сумма</th>
+                                <th>Дата</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction.phone }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if transaction.type == 'accrual' else 'danger' }}">
+                                        {{ transaction.type }}
+                                    </span>
+                                </td>
+                                <td>{{ "%.2f"|format(transaction.amount) }} ₽</td>
+                                <td>{{ transaction.created_at|datetime_format }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4">Нет операций за последнее время</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h5 class="mb-0">Статистика продаж</h5>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-light {{ 'active' if period == 'day' }}" 
+                        onclick="updateChart('day')">
+                    День
+                </button>
+                <button class="btn btn-sm btn-light {{ 'active' if period == 'week' }}" 
+                        onclick="updateChart('week')">
+                    Неделя
+                </button>
+                <button class="btn btn-sm btn-light {{ 'active' if period == 'month' }}" 
+                        onclick="updateChart('month')">
+                    Месяц
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h2>Поиск клиента</h2>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="input-group">
+                    <input type="tel" 
+                           name="phone" 
+                           class="form-control" 
+                           placeholder="Введите номер телефона (+7XXXXXXXXXX)"
+                           pattern="\+7\d{10}"
+                           required>
+                    <button type="submit" class="btn btn-primary">
+                        Найти
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
